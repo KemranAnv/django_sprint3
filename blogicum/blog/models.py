@@ -16,7 +16,11 @@ class Post(models.Model):
 class Category(models.Model):
     """Тематическая категория."""
 
-    pass
+    title = models.CharField(max_length=256)
+    description = models.TextField()
+    slug = models.SlugField(unique=True)
+    is_published = models.BooleanField(default=True)
+    created_at = models.DateTimeField()
 
 
 class Location(models.Model):
