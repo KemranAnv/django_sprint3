@@ -22,4 +22,6 @@ class Category(models.Model):
 class Location(models.Model):
     """Географическая метка."""
 
-    pass
+    name = models.CharField(max_length=256)
+    is_published = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
