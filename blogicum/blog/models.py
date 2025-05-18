@@ -2,8 +2,20 @@
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 User = get_user_model()
+
+
+def get_published_posts(queryset=None):
+    """get_published_posts."""
+    if queryset is None:
+        queryset = Post.objects.all()
+    return queryset.filter(
+        is_published=True,
+        pub_date__lte=timezone.now(),
+        category__is_published=True
+    ).select_related('category', 'location', 'author')
 
 
 class BaseModel(models.Model):
