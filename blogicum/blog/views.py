@@ -22,7 +22,7 @@ class IndexView(ListView):
         ).select_related(
             'category', 'location', 'author'
         ).order_by(
-            '-pub_date'
+            'pub_date'
         )[:5]
 
 
@@ -57,7 +57,7 @@ class CategoryPostView(ListView):
         ).select_related(
             'category', 'location', 'author'
         ).order_by(
-            '-pub_date'
+            'pub_date'
         )
     
     def get_context_data(self, **kwargs):
