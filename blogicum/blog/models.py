@@ -6,8 +6,23 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-# Create your models here.
-class Category(models.Model):
+class BaseModel(models.Model):
+    """BaseModel."""
+
+    is_published = models.BooleanField(
+        'Опубликовано',
+        default=True,
+        help_text='Снимите галочку, чтобы скрыть публикацию.'
+    )
+    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
+
+    class Meta:
+        """Meta."""
+
+        abstract = True
+
+
+class Category(BaseModel):
     """Тематическая категория."""
 
     title = models.CharField('Заголовок', max_length=256)
@@ -20,12 +35,6 @@ class Category(models.Model):
             'разрешены символы латиницы, цифры, дефис и подчёркивание.'
         ),
     )
-    is_published = models.BooleanField(
-        'Опубликовано',
-        default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
 
     class Meta:
         """Мета файлы для Category."""
@@ -33,20 +42,15 @@ class Category(models.Model):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
+    def __str__(self):
+        """__str__."""
+        return self.title
 
-class Location(models.Model):
+
+class Location(BaseModel):
     """Географическая метка."""
 
     name = models.CharField('Название места', max_length=256)
-    is_published = models.BooleanField(
-        'Опубликовано',
-        default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField(
-        'Добавлено',
-        auto_now_add=True
-    )
 
     class Meta:
         """Мета файлы для Location."""
@@ -54,8 +58,12 @@ class Location(models.Model):
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
+    def __str__(self):
+        """__str__."""
+        return self.name
 
-class Post(models.Model):
+
+class Post(BaseModel):
     """Публикация."""
 
     title = models.CharField('Заголовок', max_length=256, )
@@ -85,18 +93,13 @@ class Post(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
-    is_published = models.BooleanField(
-        'Опубликовано',
-        default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField(
-        'Добавлено',
-        auto_now_add=True
-    )
 
     class Meta:
         """Мета файлы для Post."""
 
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
+
+    def __str__(self):
+        """__str__."""
+        return self.title
