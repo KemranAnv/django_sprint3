@@ -21,7 +21,9 @@ class IndexView(ListView):
             category__is_published=True
         ).select_related(
             'category', 'location', 'author'
-        )
+        ).order_by(
+            '-pub_date'
+        )[:5]
 
 
 class PostDetailView(DetailView):
