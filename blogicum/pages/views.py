@@ -1,19 +1,15 @@
-# from django.shortcuts import render
+"""View function of app pages."""
+
 from django.views.generic import TemplateView
 
-# Create your views here.
+
 class AboutView(TemplateView):
+    """Aboutview."""
+
     template_name = 'pages/about.html'
 
 
 class RulesView(TemplateView):
+    """Rulesview."""
+
     template_name = 'pages/rules.html'
-
-# def about(request):
-#     template = 'pages/about.html'
-#     return render(request, template)
-
-
-# def rules(request):
-#     template = 'pages/rules.html'
-#     return render(request, template)
