@@ -56,12 +56,15 @@ class CategoryPostView(ListView):
             category__is_published=True,
         ).select_related(
             'category', 'location', 'author'
+        ).order_by(
+            '-pub_date'
         )
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = get_object_or_404(
-            Category, slug=self.kwargs['slug'])
+            Category.objects.filter(is_published=True),
+            slug=self.kwargs['slug'])
         return context
 
 
