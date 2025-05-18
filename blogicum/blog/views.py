@@ -2,8 +2,9 @@
 
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
-from .models import Post, Category, get_published_posts
+from .models import Post, Category
 
 
 class IndexView(ListView):
@@ -15,7 +16,15 @@ class IndexView(ListView):
 
     def get_queryset(self):
         """get_queryset."""
-        return get_published_posts().order_by('pub_date')[:5]
+        return Post.objects.filter(
+            is_published=True,
+            pub_date__lte=timezone.now(),
+            category__is_published=True
+        ).select_related(
+            'category', 'location', 'author'
+        ).order_by(
+            'pub_date'
+        )[:5]
 
 
 class PostDetailView(DetailView):
@@ -28,8 +37,13 @@ class PostDetailView(DetailView):
     def get_object(self):
         """get_object."""
         return get_object_or_404(
-            get_published_posts(),
-            pk=self.kwargs['pk']
+            Post.objects.filter(
+                is_published=True,
+                pub_date__lte=timezone.now(),
+                category__is_published=True
+            ).select_related(
+                'category', 'location', 'author'
+            ), pk=self.kwargs['pk']
         )
 
 
@@ -42,10 +56,16 @@ class CategoryPostView(ListView):
 
     def get_queryset(self):
         """get_queryset."""
-        category = get_object_or_404(
-            Category, slug=self.kwargs['slug'], is_published=True
+        return Post.objects.filter(
+            category__slug=self.kwargs['slug'],
+            is_published=True,
+            pub_date__lte=timezone.now(),
+            category__is_published=True,
+        ).select_related(
+            'category', 'location', 'author'
+        ).order_by(
+            'pub_date'
         )
-        return get_published_posts(category.posts.all())
 
     def get_context_data(self, **kwargs):
         """get_context_data."""
